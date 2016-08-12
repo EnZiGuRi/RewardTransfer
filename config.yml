@@ -1,0 +1,8 @@
+#RewardTransfer configuration
+#
+#
+Hostname: localhost
+Port: 3306
+Username: root
+Password: 
+Database: RewardTransfer
