@@ -24,7 +24,7 @@ public class DepositEvent implements Listener {
 			mysql.depositItemDB(player, serializedItem);
 			// Debug DB save
 			player.sendMessage(ChatColor.GREEN
-					+ "Saving to DB:" + serializedItem);
+					+ "Saving to DB: " + serializedItem);
 		}
 		if (mysql.mysql_success()) {
 			player.setItemInHand(null);
