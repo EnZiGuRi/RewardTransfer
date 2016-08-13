@@ -25,12 +25,12 @@ public class ItemStackSerializer {
 			serializedItemStack = serializedItemStack + "Item@" + itemStackType;
 
 			if (itemStack.getItemMeta().getDisplayName() != null) {
-				String itemStackmeta = String.valueOf(itemStack
-						.getItemMeta().getDisplayName());
+				String itemStackmeta = String.valueOf(itemStack.getItemMeta()
+						.getDisplayName());
 				serializedItemStack = serializedItemStack + ":DisplayName@"
 						+ itemStackmeta;
 			}
-			
+
 			if (itemStack.getDurability() != 0) {
 				String itemStackDurability = String.valueOf(itemStack
 						.getDurability());
@@ -48,8 +48,8 @@ public class ItemStackSerializer {
 					NBTTagCompound entityTag = tag.getCompound("EntityTag");
 					if (entityTag.hasKey("id")) {
 						String EggEntity = entityTag.getString("id");
-						serializedItemStack = serializedItemStack + ":EntityTag@"
-								+ EggEntity;
+						serializedItemStack = serializedItemStack
+								+ ":EntityTag@" + EggEntity;
 					}
 				}
 			}
@@ -110,8 +110,50 @@ public class ItemStackSerializer {
 				createdItemStack = Boolean.valueOf(true);
 			} else if ((itemAttribute[0].equals("EntityTag"))
 					&& (createdItemStack.booleanValue())) {
-				itemStack.setTypeId(Integer.valueOf(itemAttribute[1])
-						.intValue());
+
+				net.minecraft.server.v1_10_R1.ItemStack nmsStack = CraftItemStack
+						.asNMSCopy(itemStack);
+				if (!(nmsStack.hasTag())) {
+					NBTTagCompound tag = nmsStack.getTag();
+					player.sendMessage(ChatColor.GREEN + "GET TAG");
+					if (tag == null) {
+						tag = new NBTTagCompound();
+					}
+					NBTTagCompound id = new NBTTagCompound();
+					id.setString("id", String.valueOf( itemAttribute[1]));
+
+					player.sendMessage(ChatColor.GREEN + id.toString());
+
+					tag.set("EntityTag", id);
+					player.sendMessage(ChatColor.GREEN + tag.toString());
+					nmsStack.setTag(tag);
+					itemStack = CraftItemStack.asBukkitCopy(nmsStack);
+					player.sendMessage(ChatColor.GREEN + nmsStack.toString());
+					player.sendMessage(ChatColor.GREEN + itemStack.toString());
+					/*
+					 * if (entityTag.hasKey("id")) { entityTag.setString("id",
+					 * String.valueOf( itemAttribute[1]));
+					 * player.sendMessage(ChatColor.GREEN + "IF done"); }
+					 */
+				}
+
+				/*
+				 * net.minecraft.server.v1_10_R1.ItemStack nmsStack =
+				 * CraftItemStack .asNMSCopy(itemStack); NBTTagCompound
+				 * tagCompound = ItemStack.getTag(); NBTTagCompound tag =
+				 * nmsStack.getTag(); NBTTagCompound id = new NBTTagCompound();
+				 * id.setString("id", type.getName());
+				 * tagCompound.set("EntityTag", id);
+				 * nmsStack.setTag(tagCompound);
+				 * 
+				 * NBTTagCompound entityTag = tag.set("EntityTag",
+				 * String.valueOf( itemAttribute[1]));
+				 * itemStack.setTag(entityTag);
+				 */
+				/*
+				 * itemStack.setTypeId(Integer.valueOf(itemAttribute[1])
+				 * .intValue());
+				 */
 			} else if ((itemAttribute[0].equals("DisplayName"))
 					&& (createdItemStack.booleanValue())) {
 				ItemMeta itemStackMeta = itemStack.getItemMeta();
