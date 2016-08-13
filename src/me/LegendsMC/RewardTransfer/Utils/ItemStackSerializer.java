@@ -115,45 +115,15 @@ public class ItemStackSerializer {
 						.asNMSCopy(itemStack);
 				if (!(nmsStack.hasTag())) {
 					NBTTagCompound tag = nmsStack.getTag();
-					player.sendMessage(ChatColor.GREEN + "GET TAG");
 					if (tag == null) {
 						tag = new NBTTagCompound();
 					}
 					NBTTagCompound id = new NBTTagCompound();
-					id.setString("id", String.valueOf( itemAttribute[1]));
-
-					player.sendMessage(ChatColor.GREEN + id.toString());
-
+					id.setString("id", String.valueOf(itemAttribute[1]));
 					tag.set("EntityTag", id);
-					player.sendMessage(ChatColor.GREEN + tag.toString());
 					nmsStack.setTag(tag);
 					itemStack = CraftItemStack.asBukkitCopy(nmsStack);
-					player.sendMessage(ChatColor.GREEN + nmsStack.toString());
-					player.sendMessage(ChatColor.GREEN + itemStack.toString());
-					/*
-					 * if (entityTag.hasKey("id")) { entityTag.setString("id",
-					 * String.valueOf( itemAttribute[1]));
-					 * player.sendMessage(ChatColor.GREEN + "IF done"); }
-					 */
 				}
-
-				/*
-				 * net.minecraft.server.v1_10_R1.ItemStack nmsStack =
-				 * CraftItemStack .asNMSCopy(itemStack); NBTTagCompound
-				 * tagCompound = ItemStack.getTag(); NBTTagCompound tag =
-				 * nmsStack.getTag(); NBTTagCompound id = new NBTTagCompound();
-				 * id.setString("id", type.getName());
-				 * tagCompound.set("EntityTag", id);
-				 * nmsStack.setTag(tagCompound);
-				 * 
-				 * NBTTagCompound entityTag = tag.set("EntityTag",
-				 * String.valueOf( itemAttribute[1]));
-				 * itemStack.setTag(entityTag);
-				 */
-				/*
-				 * itemStack.setTypeId(Integer.valueOf(itemAttribute[1])
-				 * .intValue());
-				 */
 			} else if ((itemAttribute[0].equals("DisplayName"))
 					&& (createdItemStack.booleanValue())) {
 				ItemMeta itemStackMeta = itemStack.getItemMeta();
