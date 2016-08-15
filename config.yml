@@ -6,3 +6,6 @@ Port: 3306
 Username: root
 Password: 
 Database: RewardTransfer
+#
+#Debug:
+Debug: false

@@ -1,20 +1,17 @@
 package me.LegendsMC.RewardTransfer;
 
 import java.io.File;
+
 import me.LegendsMC.RewardTransfer.Commands.CheckDB;
 import me.LegendsMC.RewardTransfer.Events.SignBreakEvent;
 import me.LegendsMC.RewardTransfer.Events.SignCreateEvent;
 import me.LegendsMC.RewardTransfer.Listeners.SignInteract;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RewardTransfer extends JavaPlugin {
@@ -26,6 +23,8 @@ public class RewardTransfer extends JavaPlugin {
 	String dbPort = getConfig().getString("Port");
 	String dbDatabase = getConfig().getString("Database");
 
+	boolean DebugMode = getConfig().getBoolean("DebugMode");
+
 	public void onEnable() {
 		instance = this;
 		initializeConfig();
@@ -33,6 +32,11 @@ public class RewardTransfer extends JavaPlugin {
 				this.dbUser, this.dbPass);
 		registerEvents();
 		registerCommands();
+		if (DebugMode == true) {
+			Bukkit.getConsoleSender().sendMessage(
+					ChatColor.GREEN + "[RewardTransfer] " + ChatColor.RED
+							+ "Debug Mode ON");
+		}
 		Bukkit.getConsoleSender().sendMessage(
 				ChatColor.GREEN + "[RewardTransfer] Enabled!");
 	}
