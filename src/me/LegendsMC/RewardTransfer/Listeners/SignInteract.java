@@ -44,14 +44,19 @@ public class SignInteract implements Listener {
 				event.setCancelled(true);
 				if (sign.getLine(1).contentEquals(
 						ChatColor.DARK_BLUE + "Deposit")) {
-					if (player.hasPermission("rewardtransfer.sign.use.deposit")) {
-						ItemStack deposititem = player.getInventory()
-								.getItemInMainHand();
-						DepositEvent.DepositAction(player, deposititem);
-					} else {
-						player.sendMessage(ChatColor.DARK_GREEN
-								+ "[RewardTransfer] " + ChatColor.WHITE
-								+ "You dont have permission to deposit items!");
+					if (!(event.getPlayer().getItemInHand().getType()
+							.equals(Material.AIR))) {
+						if (player
+								.hasPermission("rewardtransfer.sign.use.deposit")) {
+							ItemStack deposititem = player.getInventory()
+									.getItemInMainHand();
+							DepositEvent.DepositAction(player, deposititem);
+						} else {
+							player.sendMessage(ChatColor.DARK_GREEN
+									+ "[RewardTransfer] "
+									+ ChatColor.WHITE
+									+ "You dont have permission to deposit items!");
+						}
 					}
 				}
 				if (sign.getLine(1).contentEquals(

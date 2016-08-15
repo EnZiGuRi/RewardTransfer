@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public class WithdrawEvent implements Listener {
 	static MySQLManager mysql = new MySQLManager();
@@ -33,7 +32,7 @@ public class WithdrawEvent implements Listener {
 				serializedItem, player);
 
 		player.getInventory().addItem(new ItemStack[] { unserializedItem });
-		player.updateInventory();
+		player.updateInventory();;
 		mysql.removeRow(player);
 	}
 }

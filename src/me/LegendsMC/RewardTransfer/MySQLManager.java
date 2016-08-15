@@ -1,15 +1,12 @@
 package me.LegendsMC.RewardTransfer;
 
 import code.husky.mysql.MySQL;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.UUID;
 import me.LegendsMC.RewardTransfer.Events.WithdrawEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class MySQLManager {
