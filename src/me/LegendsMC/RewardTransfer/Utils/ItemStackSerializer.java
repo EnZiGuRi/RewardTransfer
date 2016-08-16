@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 
 public class ItemStackSerializer {
 
@@ -46,14 +47,14 @@ public class ItemStackSerializer {
 						+ itemStackAmount;
 			}
 
-			if (itemStack.hasItemMeta()) {
+			if (itemStack.getItemMeta().getDisplayName() != null) {
 				String itemStackName = String.valueOf(itemStack.getItemMeta()
 						.getDisplayName());
 				serializedItemStack = serializedItemStack + ":DisplayName@"
 						+ itemStackName;
 			}
 
-			if (itemStack.hasItemMeta()) {
+			if (itemStack.getItemMeta().getLore() != null) {
 				String itemStackLore = String.valueOf(itemStack.getItemMeta()
 						.getLore());
 				if (!(itemStackLore == null)) {
@@ -71,13 +72,28 @@ public class ItemStackSerializer {
 				}
 			}
 
+			if (itemStack.getType() == Material.POTION) {
+				PotionMeta itemStackLore = (PotionMeta) itemStack.getItemMeta();
+				String PotionType = String.valueOf(itemStack.getType());
+				if (DebugMode == true) {
+					player.sendMessage(ChatColor.GREEN + "Potion: "
+							+ itemStackLore.toString());
+					player.sendMessage(ChatColor.GREEN + "Potion Type: "
+							+ PotionType.toString());
+				}
+				if (!(itemStackLore == null)) {
+					serializedItemStack = serializedItemStack + ":Potion@"
+							+ itemStackLore;
+				}
+			}
+
 			// MONSTER_EGG
 
 			if (itemStack.getType() == Material.MONSTER_EGG) {
-				net.minecraft.server.v1_10_R1.ItemStack nmsStack = CraftItemStack
+				net.minecraft.server.v1_10_R1.ItemStack Monster_Egg = CraftItemStack
 						.asNMSCopy(itemStack);
-				if (nmsStack.hasTag()) {
-					NBTTagCompound tag = nmsStack.getTag();
+				if (Monster_Egg.hasTag()) {
+					NBTTagCompound tag = Monster_Egg.getTag();
 					NBTTagCompound entityTag = tag.getCompound("EntityTag");
 					if (entityTag.hasKey("id")) {
 						String EggEntity = entityTag.getString("id");
@@ -147,92 +163,8 @@ public class ItemStackSerializer {
 	ItemStack book;
 	int Amount;
 
-	// Auxiliary Methods
 
-	/*
-	 * // Get Item Name
-	 * 
-	 * public Material GetitemName() { return itemName; }
-	 * 
-	 * public void SetitemName() { if (itemAttribute[0].equals("Item")) {
-	 * itemName = Material.getMaterial(String.valueOf( itemAttribute[1])); } }
-	 * 
-	 * //Item Amount
-	 * 
-	 * public int GetitemAmount() { return itemAmount; }
-	 * 
-	 * public void SetitemAmount() {
-	 * 
-	 * if (itemAttribute[0].equals("Amount")) { itemAmount =
-	 * Integer.valueOf(itemAttribute[1]) .intValue(); }
-	 * 
-	 * }
-	 */
-
-	// Written Book
-
-	public ItemStack GetWrittenBook() {
-		return book;
-	}
-
-	public void SetWrittenBook(ItemStack itemStack) {
-		int Amount = 0;
-		BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
-		if (auxAttribute[0].equals("BookPageAmount")) {
-			Integer BookPageAmount = Integer.valueOf(auxAttribute[1]);
-			Amount = BookPageAmount;
-		}
-		if (auxAttribute[0].equals("BookTitle")) {
-			bookMeta.setTitle(String.valueOf(auxAttribute[1]).toString());
-		}
-		if (auxAttribute[0].equals("BookAuthor")) {
-			bookMeta.setAuthor(String.valueOf(auxAttribute[1]).toString());
-		}
-
-		if (auxAttribute[0].contains("BookPage")) {
-			BookMeta bookPages = (BookMeta) itemStack.getItemMeta();
-			List<String> pages = new ArrayList<String>();
-			String PageContent;
-			Integer i = 1;
-			do {
-				if (auxAttribute[0].equals("BookPage" + i)) {
-					PageContent = String.valueOf(auxAttribute[1]).toString();
-					nplayer.sendMessage(ChatColor.GREEN + "PageAmount: "
-							+ Amount);
-					nplayer.sendMessage(ChatColor.GREEN + "PageContent: "
-							+ PageContent + "Loop:" + i);
-					pages.add("This will be page one.");
-					pages.add("This will be page two.");
-				}
-				i++;
-			} while (i >= 1 && i <= Amount);
-
-			bookPages.setPages(pages);
-			itemStack.setItemMeta(bookPages);
-		}
-
-		/*
-		 * String PageContent; int i = 1; BookMeta meta = (BookMeta)
-		 * itemStack.getItemMeta();
-		 * 
-		 * if (auxAttribute[0].equals("BookTitle")) {
-		 * meta.setTitle(String.valueOf(auxAttribute[1])); } if
-		 * (auxAttribute[0].equals("BookAuthor")) {
-		 * meta.setAuthor(String.valueOf(auxAttribute[1])); } if
-		 * (auxAttribute[0].equals("BookPageAmount")) { bookPageAmount =
-		 * Integer.valueOf(auxAttribute[1]); }
-		 * 
-		 * List<String> pages = Lists.newArrayList();
-		 * 
-		 * do { if (auxAttribute[0].equals("BookPage" + i)) { PageContent =
-		 * String.valueOf(auxAttribute[1]).toString();
-		 * nplayer.sendMessage(ChatColor.GREEN + "PageAmount: " +
-		 * bookPageAmount); nplayer.sendMessage(ChatColor.GREEN +
-		 * "PageContent: " + PageContent + "Loop:" + i); pages.add(PageContent);
-		 * } i++; } while (i >= 1 && i <= bookPageAmount); meta.setPages(pages);
-		 * book.setItemMeta(meta);
-		 */
-	}
+	
 
 	// /////////////////////////////
 
@@ -283,6 +215,22 @@ public class ItemStackSerializer {
 				}
 				itemStackMeta.setLore(Lore);
 				itemStack.setItemMeta(itemStackMeta);
+			} else if ((itemAttribute[0].equals("EntityTag"))
+					&& (createdItemStack.booleanValue())) {
+
+				net.minecraft.server.v1_10_R1.ItemStack nmsStack = CraftItemStack
+						.asNMSCopy(itemStack);
+				if (!(nmsStack.hasTag())) {
+					NBTTagCompound tag = nmsStack.getTag();
+					if (tag == null) {
+						tag = new NBTTagCompound();
+					}
+					NBTTagCompound id = new NBTTagCompound();
+					id.setString("id", String.valueOf(itemAttribute[1]));
+					tag.set("EntityTag", id);
+					nmsStack.setTag(tag);
+					itemStack = CraftItemStack.asBukkitCopy(nmsStack);
+				}
 			}
 
 			// Call Written Book
