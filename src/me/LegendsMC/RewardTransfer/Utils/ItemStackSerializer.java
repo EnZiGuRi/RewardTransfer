@@ -33,18 +33,42 @@ public class ItemStackSerializer {
 			String itemStackType = String.valueOf(itemStack.getType());
 			serializedItemStack = serializedItemStack + "Item@" + itemStackType;
 
-			if (itemStack.getItemMeta().getDisplayName() != null) {
-				String itemStackmeta = String.valueOf(itemStack.getItemMeta()
-						.getDisplayName());
-				serializedItemStack = serializedItemStack + ":DisplayName@"
-						+ itemStackmeta;
-			}
-
 			if (itemStack.getDurability() != 0) {
 				String itemStackDurability = String.valueOf(itemStack
 						.getDurability());
 				serializedItemStack = serializedItemStack + ":Durability@"
 						+ itemStackDurability;
+			}
+
+			if (itemStack.getAmount() != 1) {
+				String itemStackAmount = String.valueOf(itemStack.getAmount());
+				serializedItemStack = serializedItemStack + ":Amount@"
+						+ itemStackAmount;
+			}
+
+			if (itemStack.hasItemMeta()) {
+				String itemStackName = String.valueOf(itemStack.getItemMeta()
+						.getDisplayName());
+				serializedItemStack = serializedItemStack + ":DisplayName@"
+						+ itemStackName;
+			}
+
+			if (itemStack.hasItemMeta()) {
+				String itemStackLore = String.valueOf(itemStack.getItemMeta()
+						.getLore());
+				if (!(itemStackLore == null)) {
+					serializedItemStack = serializedItemStack + ":DisplayLore@"
+							+ itemStackLore;
+				}
+			}
+			Map<Enchantment, Integer> itemStackEnch = itemStack
+					.getEnchantments();
+			if (itemStackEnch.size() > 0) {
+				for (Map.Entry<Enchantment, Integer> ench : itemStackEnch
+						.entrySet()) {
+					serializedItemStack = serializedItemStack + ":Enchantment@"
+							+ ench.getKey().getId() + "@" + ench.getValue();
+				}
 			}
 
 			// MONSTER_EGG
@@ -91,24 +115,8 @@ public class ItemStackSerializer {
 
 				if (DebugMode == true) {
 					ItemMeta FireworkMeta = itemStack.getItemMeta();
-					player.sendMessage(ChatColor.GREEN
-							+ "FireworkMeta: " + FireworkMeta.toString());
-				}
-			}
-
-			if (itemStack.getAmount() != 1) {
-				String itemStackAmount = String.valueOf(itemStack.getAmount());
-				serializedItemStack = serializedItemStack + ":Amount@"
-						+ itemStackAmount;
-			}
-			Map<Enchantment, Integer> itemStackEnch = itemStack
-					.getEnchantments();
-			if (itemStackEnch.size() > 0) {
-				for (Map.Entry<Enchantment, Integer> ench : itemStackEnch
-						.entrySet()) {
-					serializedItemStack = serializedItemStack + ":Enchantment@"
-							+ ((Enchantment) ench.getKey()).getId() + "@"
-							+ ench.getValue();
+					player.sendMessage(ChatColor.GREEN + "FireworkMeta: "
+							+ FireworkMeta.toString());
 				}
 			}
 			if (itemStack.getType() == Material.ENCHANTED_BOOK) {
@@ -240,17 +248,15 @@ public class ItemStackSerializer {
 				itemStack = new ItemStack(Material.getMaterial(String
 						.valueOf(itemAttribute[1])));
 				createdItemStack = Boolean.valueOf(true);
-			} else if (itemAttribute[0].equals("DisplayName")) {
-				ItemMeta itemStackMeta = itemStack.getItemMeta();
-				itemStackMeta.setDisplayName(String.valueOf(itemAttribute[1]));
-				itemStack.setItemMeta(itemStackMeta);
-			} else if (itemAttribute[0].equals("Durability")) {
+			} else if (itemAttribute[0].equals("Durability")
+					&& createdItemStack) {
 				itemStack.setDurability(Short.valueOf(itemAttribute[1])
 						.shortValue());
-			} else if (itemAttribute[0].equals("Amount")) {
+			} else if (itemAttribute[0].equals("Amount") && createdItemStack) {
 				itemStack.setAmount(Integer.valueOf(itemAttribute[1])
 						.intValue());
-			} else if (itemAttribute[0].equals("Enchantment")) {
+			} else if (itemAttribute[0].equals("Enchantment")
+					&& createdItemStack) {
 				itemStack.addEnchantment(Enchantment.getById(Integer.valueOf(
 						itemAttribute[1]).intValue()),
 						Integer.valueOf(itemAttribute[2]).intValue());
@@ -261,7 +267,24 @@ public class ItemStackSerializer {
 						.valueOf(itemAttribute[1]).intValue()), Integer
 						.valueOf(itemAttribute[2]).intValue(), true);
 				itemStack.setItemMeta(itemStackMeta);
+			} else if (itemAttribute[0].equals("DisplayName")
+					&& createdItemStack) {
+				ItemMeta itemStackMeta = itemStack.getItemMeta();
+				itemStackMeta.setDisplayName(String.valueOf(itemAttribute[1]));
+				itemStack.setItemMeta(itemStackMeta);
+			} else if (itemAttribute[0].equals("DisplayLore")
+					&& createdItemStack) {
+				ItemMeta itemStackMeta = itemStack.getItemMeta();
+				String removeBuckle = itemAttribute[1].substring(1,
+						itemAttribute[1].length() - 1);
+				ArrayList<String> Lore = new ArrayList<String>();
+				for (String podpis : removeBuckle.split(", ")) {
+					Lore.add(podpis);
+				}
+				itemStackMeta.setLore(Lore);
+				itemStack.setItemMeta(itemStackMeta);
 			}
+
 			// Call Written Book
 
 			if (auxAttribute[0].equals("BookPageAmount")) {
@@ -271,8 +294,7 @@ public class ItemStackSerializer {
 			if ((itemAttribute[0].equals("BookTitle"))
 					&& (createdItemStack.booleanValue())) {
 				BookMeta bookTitle = (BookMeta) itemStack.getItemMeta();
-				bookTitle.setTitle(String.valueOf(itemAttribute[1])
-						.toString());
+				bookTitle.setTitle(String.valueOf(itemAttribute[1]).toString());
 				itemStack.setItemMeta(bookTitle);
 			}
 			if ((itemAttribute[0].equals("BookAuthor"))
