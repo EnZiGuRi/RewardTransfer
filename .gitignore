@@ -4,6 +4,7 @@
 .mtj.tmp/
 
 bin/
+Server/
 .settings/
 
 # External tool builders
