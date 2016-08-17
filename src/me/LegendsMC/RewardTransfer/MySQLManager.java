@@ -90,7 +90,7 @@ public class MySQLManager {
 			db.openConnection();
 			Statement statement = db.getConnection().createStatement();
 			String playerUUID = player.getUniqueId().toString();
-			if (checkItemDB(player)) {
+			if (checkItemDB(player) == true) {
 				String sql = "SELECT * FROM RewardTransfer WHERE player_uuid = '"
 						+ playerUUID + "'";
 				ResultSet result = statement.executeQuery(sql);

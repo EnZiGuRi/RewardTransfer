@@ -45,11 +45,6 @@ public class SignInteract implements Listener {
 						ChatColor.DARK_BLUE + "Deposit")) {
 					if (player.hasPermission("rewardtransfer.sign.use.deposit")) {
 						TransferInventory.openDepositInventory(player);
-						/*
-						 * ItemStack deposititem = player.getInventory()
-						 * .getItemInMainHand();
-						 * DepositEvent.DepositAction(player, deposititem);
-						 */
 					} else {
 						player.sendMessage(ChatColor.DARK_GREEN
 								+ "[RewardTransfer] " + ChatColor.WHITE
@@ -61,10 +56,6 @@ public class SignInteract implements Listener {
 					if (player
 							.hasPermission("rewardtransfer.sign.use.withdraw")) {
 						TransferInventory.openWithdrawInventory(player);
-						/*
-						 * ItemStack withdrawitem = player.getItemInHand();
-						 * WithdrawEvent.WithdrawAction(player, withdrawitem);
-						 */
 					} else {
 						player.sendMessage(ChatColor.DARK_GREEN
 								+ "[RewardTransfer] " + ChatColor.WHITE

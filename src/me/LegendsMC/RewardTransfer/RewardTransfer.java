@@ -5,6 +5,7 @@ import java.io.File;
 import me.LegendsMC.RewardTransfer.Commands.CheckDB;
 import me.LegendsMC.RewardTransfer.Events.SignBreakEvent;
 import me.LegendsMC.RewardTransfer.Events.SignCreateEvent;
+import me.LegendsMC.RewardTransfer.Listeners.InventoryClick;
 import me.LegendsMC.RewardTransfer.Listeners.InventoryClose;
 import me.LegendsMC.RewardTransfer.Listeners.SignInteract;
 
@@ -68,6 +69,7 @@ public class RewardTransfer extends JavaPlugin {
 		registerEvent(new SignBreakEvent());
 		registerEvent(new SignInteract());
 		registerEvent(new InventoryClose());
+		registerEvent(new InventoryClick());
 	}
 
 	private void registerCommands() {
