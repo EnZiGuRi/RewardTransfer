@@ -2,14 +2,15 @@ package me.LegendsMC.RewardTransfer;
 
 import java.io.File;
 
+import me.LegendsMC.RewardTransfer.Commands.Bank;
 import me.LegendsMC.RewardTransfer.Commands.CheckDB;
 import me.LegendsMC.RewardTransfer.Events.SignBreakEvent;
 import me.LegendsMC.RewardTransfer.Events.SignCreateEvent;
+import me.LegendsMC.RewardTransfer.Listeners.InventoryClose;
 import me.LegendsMC.RewardTransfer.Listeners.SignInteract;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,10 +68,12 @@ public class RewardTransfer extends JavaPlugin {
 		registerEvent(new SignCreateEvent());
 		registerEvent(new SignBreakEvent());
 		registerEvent(new SignInteract());
+		registerEvent(new InventoryClose());
 	}
 
 	private void registerCommands() {
 		getCommand("RewardTransfer").setExecutor(new CheckDB());
+		getCommand("RewardTransfer").setExecutor(new Bank());
 	}
 
 	public static Plugin getInstance() {

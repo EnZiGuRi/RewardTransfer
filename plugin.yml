@@ -3,7 +3,6 @@ main: me.LegendsMC.RewardTransfer.RewardTransfer
 description: RewardTransfer Plugin!
 version: 1
 commands:
-   ClearDB:
-      description: This is a demo command.
    RewardTransfer:
-      description: Transfers rewards I think.
+      aliases: [rt]
+      description: Reward Transfer.
