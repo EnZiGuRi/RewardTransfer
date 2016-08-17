@@ -3,9 +3,7 @@ package me.LegendsMC.RewardTransfer.Listeners;
 import java.sql.SQLException;
 import java.util.Set;
 
-import me.LegendsMC.RewardTransfer.Events.DepositEvent;
-import me.LegendsMC.RewardTransfer.Events.WithdrawEvent;
-import me.LegendsMC.RewardTransfer.Utils.CustomInventory;
+import me.LegendsMC.RewardTransfer.Utils.TransferInventory;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,7 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class SignInteract implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -46,28 +43,28 @@ public class SignInteract implements Listener {
 				event.setCancelled(true);
 				if (sign.getLine(1).contentEquals(
 						ChatColor.DARK_BLUE + "Deposit")) {
-					if (!(event.getPlayer().getItemInHand().getType()
-							.equals(Material.AIR))) {
-						if (player
-								.hasPermission("rewardtransfer.sign.use.deposit")) {
-							CustomInventory.openCustomInventory(player);
-							/*ItemStack deposititem = player.getInventory()
-									.getItemInMainHand();
-							DepositEvent.DepositAction(player, deposititem);*/
-						} else {
-							player.sendMessage(ChatColor.DARK_GREEN
-									+ "[RewardTransfer] "
-									+ ChatColor.WHITE
-									+ "You dont have permission to deposit items!");
-						}
+					if (player.hasPermission("rewardtransfer.sign.use.deposit")) {
+						TransferInventory.openDepositInventory(player);
+						/*
+						 * ItemStack deposititem = player.getInventory()
+						 * .getItemInMainHand();
+						 * DepositEvent.DepositAction(player, deposititem);
+						 */
+					} else {
+						player.sendMessage(ChatColor.DARK_GREEN
+								+ "[RewardTransfer] " + ChatColor.WHITE
+								+ "You dont have permission to deposit items!");
 					}
 				}
 				if (sign.getLine(1).contentEquals(
 						ChatColor.DARK_BLUE + "Withdraw")) {
 					if (player
 							.hasPermission("rewardtransfer.sign.use.withdraw")) {
-						ItemStack withdrawitem = player.getItemInHand();
-						WithdrawEvent.WithdrawAction(player, withdrawitem);
+						TransferInventory.openWithdrawInventory(player);
+						/*
+						 * ItemStack withdrawitem = player.getItemInHand();
+						 * WithdrawEvent.WithdrawAction(player, withdrawitem);
+						 */
 					} else {
 						player.sendMessage(ChatColor.DARK_GREEN
 								+ "[RewardTransfer] " + ChatColor.WHITE

@@ -1,10 +1,14 @@
 package me.LegendsMC.RewardTransfer;
 
 import code.husky.mysql.MySQL;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import me.LegendsMC.RewardTransfer.Events.WithdrawEvent;
+import me.LegendsMC.RewardTransfer.Utils.TransferInventory;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,6 +38,33 @@ public class MySQLManager {
 		}
 	}
 
+	public void saveInventoryDB(Player player, String serializedItem) {
+		try {
+			db.openConnection();
+			Statement statement = db.getConnection().createStatement();
+			String playerUUID = player.getUniqueId().toString();
+			if (checkItemDB(player)) {
+				String sql = "UPDATE RewardTransfer " + "SET item = '"
+						+ serializedItem + "' " + "WHERE player_uuid = '"
+						+ playerUUID + "'";
+				statement.executeUpdate(sql);
+				this.mysql_success = true;
+			} else {
+				String sql = "INSERT INTO RewardTransfer (player_uuid, item) VALUES ('"
+						+ playerUUID + "', 'NTQ7')";
+				statement.executeUpdate(sql);
+				this.mysql_success = true;
+			}
+		} catch (SQLException e) {
+			closeDB();
+			Bukkit.getConsoleSender().sendMessage(
+					ChatColor.RED
+							+ "[RewardTransfer] Can't Deposit to database! "
+							+ e.getMessage());
+			this.mysql_success = false;
+		}
+	}
+
 	public void depositItemDB(Player player, String serializedItem) {
 		try {
 			db.openConnection();
@@ -51,6 +82,38 @@ public class MySQLManager {
 							+ e.getMessage());
 			this.mysql_success = false;
 		}
+	}
+
+	public String getDBInventory(Player player) {
+		String serializedItem = null;
+		try {
+			db.openConnection();
+			Statement statement = db.getConnection().createStatement();
+			String playerUUID = player.getUniqueId().toString();
+			if (checkItemDB(player)) {
+				String sql = "SELECT * FROM RewardTransfer WHERE player_uuid = '"
+						+ playerUUID + "'";
+				ResultSet result = statement.executeQuery(sql);
+				if (result.next()) {
+					this.rowID = result.getInt(1);
+					serializedItem = result.getString(3);
+				}
+				this.mysql_success = true;
+			} else {
+				String sql = "INSERT INTO RewardTransfer (player_uuid, item) VALUES ('"
+						+ playerUUID + "', 'NTQ7')";
+				statement.executeUpdate(sql);
+				this.mysql_success = true;
+			}
+		} catch (SQLException e) {
+			closeDB();
+			Bukkit.getConsoleSender().sendMessage(
+					ChatColor.RED
+							+ "[RewardTransfer] Can't Withdraw from database! "
+							+ e.getMessage());
+			this.mysql_success = false;
+		}
+		return serializedItem;
 	}
 
 	public void withdrawItemDB(Player player) {

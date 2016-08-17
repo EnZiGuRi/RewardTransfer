@@ -2,7 +2,6 @@ package me.LegendsMC.RewardTransfer;
 
 import java.io.File;
 
-import me.LegendsMC.RewardTransfer.Commands.Bank;
 import me.LegendsMC.RewardTransfer.Commands.CheckDB;
 import me.LegendsMC.RewardTransfer.Events.SignBreakEvent;
 import me.LegendsMC.RewardTransfer.Events.SignCreateEvent;
@@ -73,7 +72,6 @@ public class RewardTransfer extends JavaPlugin {
 
 	private void registerCommands() {
 		getCommand("RewardTransfer").setExecutor(new CheckDB());
-		getCommand("RewardTransfer").setExecutor(new Bank());
 	}
 
 	public static Plugin getInstance() {
