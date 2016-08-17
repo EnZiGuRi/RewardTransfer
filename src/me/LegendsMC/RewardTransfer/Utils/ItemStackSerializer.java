@@ -1,7 +1,6 @@
 package me.LegendsMC.RewardTransfer.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import me.LegendsMC.RewardTransfer.RewardTransfer;
@@ -16,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 
 public class ItemStackSerializer {
 
@@ -71,10 +70,34 @@ public class ItemStackSerializer {
 							+ ench.getKey().getId() + "@" + ench.getValue();
 				}
 			}
+			
+			//Tipped Arrow
 
-			if (itemStack.getType() == Material.POTION) {
-				PotionMeta itemStackLore = (PotionMeta) itemStack.getItemMeta();
-				String PotionType = String.valueOf(itemStack.getType());
+			if (itemStack.getType() == Material.TIPPED_ARROW) {
+				PotionEffect TippedArrow = new PotionEffect((Map<String, Object>) itemStack);
+				String TippedArrowType = TippedArrow.getType().toString();
+				int TippedArrowAmp = TippedArrow.getAmplifier();
+				int TippedArrowDur = TippedArrow.getDuration();
+				if (DebugMode == true) {
+					player.sendMessage(ChatColor.GREEN + "Potion: "
+							+ TippedArrowType.toString());
+					player.sendMessage(ChatColor.GREEN + "Potion: "
+							+ TippedArrowAmp);
+					player.sendMessage(ChatColor.GREEN + "Potion: "
+							+ TippedArrowDur);
+				}
+				/*
+				if (!(itemStackLore == null)) {
+					serializedItemStack = serializedItemStack + ":Potion@"
+							+ itemStackLore;
+				}*/
+			}
+
+			//Potion
+			
+			/*if (itemStack.getType() == Material.POTION) {
+				net.minecraft.server.v1_10_R1.ItemStack stack = CraftItemStack.asNMSCopy(item);
+		        NBTTagCompound tagCompound = stack.getTag();
 				if (DebugMode == true) {
 					player.sendMessage(ChatColor.GREEN + "Potion: "
 							+ itemStackLore.toString());
@@ -85,7 +108,7 @@ public class ItemStackSerializer {
 					serializedItemStack = serializedItemStack + ":Potion@"
 							+ itemStackLore;
 				}
-			}
+			}*/
 
 			// MONSTER_EGG
 

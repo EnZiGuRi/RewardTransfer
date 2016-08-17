@@ -5,6 +5,8 @@ import java.util.Set;
 
 import me.LegendsMC.RewardTransfer.Events.DepositEvent;
 import me.LegendsMC.RewardTransfer.Events.WithdrawEvent;
+import me.LegendsMC.RewardTransfer.Utils.CustomInventory;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -48,9 +50,10 @@ public class SignInteract implements Listener {
 							.equals(Material.AIR))) {
 						if (player
 								.hasPermission("rewardtransfer.sign.use.deposit")) {
-							ItemStack deposititem = player.getInventory()
+							CustomInventory.openCustomInventory(player);
+							/*ItemStack deposititem = player.getInventory()
 									.getItemInMainHand();
-							DepositEvent.DepositAction(player, deposititem);
+							DepositEvent.DepositAction(player, deposititem);*/
 						} else {
 							player.sendMessage(ChatColor.DARK_GREEN
 									+ "[RewardTransfer] "
