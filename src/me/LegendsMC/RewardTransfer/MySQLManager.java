@@ -6,9 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import me.LegendsMC.RewardTransfer.Events.WithdrawEvent;
-import me.LegendsMC.RewardTransfer.Utils.TransferInventory;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -116,30 +113,6 @@ public class MySQLManager {
 		return serializedItem;
 	}
 
-	public void withdrawItemDB(Player player) {
-		try {
-			db.openConnection();
-			Statement statement = db.getConnection().createStatement();
-			String playerUUID = player.getUniqueId().toString();
-			String sql = "SELECT * FROM RewardTransfer WHERE player_uuid = '"
-					+ playerUUID + "'";
-			ResultSet result = statement.executeQuery(sql);
-			if (result.next()) {
-				this.rowID = result.getInt(1);
-				String serializedItem = result.getString(3);
-				WithdrawEvent.giveItem(player, serializedItem);
-			}
-			this.mysql_success = true;
-		} catch (SQLException e) {
-			closeDB();
-			Bukkit.getConsoleSender().sendMessage(
-					ChatColor.RED
-							+ "[RewardTransfer] Can't Withdraw from database! "
-							+ e.getMessage());
-			this.mysql_success = false;
-		}
-	}
-
 	public boolean checkItemDB(Player player) {
 		try {
 			db.openConnection();
@@ -157,26 +130,6 @@ public class MySQLManager {
 			this.mysql_success = false;
 		}
 		return false;
-	}
-
-	public void removeRow(Player player) {
-		try {
-			db.openConnection();
-			Statement statement = db.getConnection().createStatement();
-			String playerUUID = player.getUniqueId().toString();
-			String sql = "DELETE FROM RewardTransfer WHERE player_uuid = '"
-					+ playerUUID + "' AND id = '" + this.rowID + "'";
-			statement.executeUpdate(sql);
-			this.mysql_success = true;
-		} catch (SQLException e) {
-			closeDB();
-			Bukkit.getConsoleSender()
-					.sendMessage(
-							ChatColor.RED
-									+ "[RewardTransfer] Can't remove item from database! "
-									+ e.getMessage());
-			this.mysql_success = false;
-		}
 	}
 
 	public void clearDB(Player player) {
